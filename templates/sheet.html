@@ -1,0 +1,65 @@
+<h2>Instructions ({{ role }})</h2>
+<a href="/logout">Logout</a>
+
+{% if role != 'admin' %}
+<p><em>You are in read-only mode</em></p>
+{% endif %}
+
+<table border="1">
+{% for r in range(sheet|length) %}
+<tr>
+{% for c in range(sheet[r]|length) %}
+<td>
+{% if role == 'admin' %}
+  <input value="{{ sheet[r][c] }}"
+         data-row="{{ r }}"
+         data-col="{{ c }}"
+         onblur="saveCell(this)"
+         style="width:80px">
+{% else %}
+  <span style="display:inline-block; width:80px; padding:2px; border:1px solid #ccc;">
+      {{ sheet[r][c] }}
+  </span>
+{% endif %}
+</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+
+{% if role == 'admin' %}
+<h3>Manage Rows/Columns</h3>
+<form method="post" style="display:inline">
+    <input type="hidden" name="action" value="add_row">
+    <button>Add Row</button>
+</form>
+<form method="post" style="display:inline">
+    <input type="hidden" name="action" value="add_col">
+    <button>Add Column</button>
+</form>
+<form method="post" style="display:inline">
+    Row to delete: <input name="row" type="number" min="0">
+    <input type="hidden" name="action" value="delete_row">
+    <button>Delete Row</button>
+</form>
+<form method="post" style="display:inline">
+    Col to delete: <input name="col" type="number" min="0">
+    <input type="hidden" name="action" value="delete_col">
+    <button>Delete Column</button>
+</form>
+{% endif %}
+
+<script>
+function saveCell(input) {
+    const row = input.dataset.row;
+    const col = input.dataset.col;
+
+    fetch("/update_cell", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: `row=${row}&col=${col}&value=${encodeURIComponent(input.value)}`
+    }).catch(err => console.error(err));
+}
+</script>

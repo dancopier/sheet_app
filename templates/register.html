@@ -1,0 +1,17 @@
+<h2>Register User</h2>
+<form method="post">
+  Username:<br><input name="username"><br>
+  Password:<br><input type="password" name="password"><br>
+  Role:<br>
+  {% if role == 'admin' %}
+    <select name="role">
+      <option value="admin">Admin</option>
+      <option value="employee">Employee</option>
+    </select>
+  {% else %}
+    <input type="hidden" name="role" value="employee">Employee
+  {% endif %}
+  <br><br>
+  <button type="submit">Register</button>
+</form>
+<a href="/">Back to login</a>
