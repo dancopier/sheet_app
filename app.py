@@ -161,7 +161,4 @@ def logout():
 
 # ---- Main ----
 if __name__ == "__main__":
-    # Default admin if no users exist
-    if not os.path.exists(USERS_FILE):
-        add_user("admin", "admin123", "admin")
-    app.run(host="0.0.0.0", port=5000)
+    app.run()
